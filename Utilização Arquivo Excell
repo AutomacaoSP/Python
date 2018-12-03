@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+#Parâmetro para Instânciar o Drive do Browser.
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+import unittest, time, re
+import HtmlTestRunner
+from time import sleep
+import csv
+import xlrd
+
+# Função para identação de arquivo em excell
+
+book = xlrd.open_workbook("planilha.xls")
+sh = book.sheet_by_index(0)
+
+#Primeiro teste
+
+class TesteCadastroI(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+        self.driver = webdriver.Chrome("C:\Python37\Scripts\chromedriver.exe")
+        self.driver.implicitly_wait(30)
+        self.verificationErrors = []
+        self.accept_next_alert = True
+
+# Primeira Pg
+
+    def test_e_cadastroI(self, mem_dc=None):
+        driver = self.driver
+        driver.get("https://www.pontosamigo.com.br/cadastro-clientes")
+        #Ideia de formato para leitura do arquivo em exell ( Linha e coluna)
+        driver.find_element_by_id("fname").send_keys(sh.cell_value(rowx=2-1, colx=1-1))
+        driver.find_element_by_id("mname").send_keys(sh.cell_value(rowx=2-1, colx=2-1))
+        driver.find_element_by_id("lname").send_keys(sh.cell_value(rowx=2-1, colx=3-1))
+        driver.find_element_by_id("nacionalidade").click()
+        driver.find_element_by_id("cpf").send_keys(sh.cell_value(rowx=2-1, colx=5-1))
+        Select(driver.find_element_by_id("estado")).select_by_visible_text(u"São Paulo")
+        driver.find_element_by_id("cad_email").send_keys(sh.cell_value(rowx=2-1, colx=7-1))
+        driver.find_element_by_id("continuar1").click()
+        sleep (1)
+        driver.save_screenshot('C:\Python37\Evidencias\\Amigo_pg_1_Teste 1.png')
+
+    @classmethod
+    def tearDownClass(self):
+        self.driver.quit()
+
+if __name__ == "__main__":
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='C:\Python37\Evidencias'))
+
+
